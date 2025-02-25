@@ -18,6 +18,7 @@ const sequelize = new Sequelize(
 // host: process.env.DB_HOST → डेटाबेस सर्वर का होस्ट नेम (localhost या कोई अन्य)।
 // dialect: 'mysql' → Sequelize को बताया गया है कि यह MySQL के साथ काम करेगा।
 
+sequelize.sync({force:false})
 
 export default sequelize;
 // ➡️ Sequelize इंस्टेंस को एक्सपोर्ट कर दिया गया है, ताकि इसे दूसरी फाइलों में इम्पोर्ट करके डेटाबेस से कनेक्शन स्थापित किया जा सके।

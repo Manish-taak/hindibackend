@@ -10,7 +10,7 @@ const User = sequelize.define('User', {
   // ✅ sequelize.define('User', {...}) के माध्यम से एक "User" नाम की टेबल बनाई जा रही है।
 
 
-  
+
 
   name: { type: DataTypes.STRING, allowNull: false },
   //   ✅ name फ़ील्ड:
@@ -19,11 +19,15 @@ const User = sequelize.define('User', {
 
 
 
-  email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  email: { type: DataTypes.STRING, allowNull: false},
   // email फ़ील्ड:
   // type: DataTypes.STRING → यह भी एक स्ट्रिंग (text) होगी।
   // allowNull: false → यह फ़ील्ड खाली (null) नहीं हो सकती।
   // unique: true → इस फ़ील्ड के लिए हर यूज़र का ईमेल अलग (unique) होगा, यानी एक जैसा ईमेल दो बार नहीं आ सकता।
+
+  imageUrl: {
+    type: DataTypes.STRING,
+  },
 
 });
 
