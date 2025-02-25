@@ -26,8 +26,8 @@ router.post("/login", loginUser);
 // ✅ POST /users:
 // जब कोई "/users" API को POST मेथड से कॉल करेगा, तब createUser फ़ंक्शन चलेगा।
 // नए यूज़र को डेटाबेस में जोड़ने (Insert new user) के लिए उपयोग होता है।
-router.put('/users/:id',upload.array("images"),updateUser);
-router.delete('/users/:id',deleteUser);
+router.put('/users/:id', upload.array("images"), updateUser);
+router.delete('/users/:id', deleteUser);
 
 export default router;
 // ✅ राउटर को एक्सपोर्ट किया गया है, ताकि इसे server.js या किसी अन्य फाइल में उपयोग किया जा सके।

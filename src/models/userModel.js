@@ -19,7 +19,7 @@ const User = sequelize.define('User', {
 
 
 
-  email: { type: DataTypes.STRING, allowNull: false},
+  email: { type: DataTypes.STRING, allowNull: false },
   // email फ़ील्ड:
   // type: DataTypes.STRING → यह भी एक स्ट्रिंग (text) होगी।
   // allowNull: false → यह फ़ील्ड खाली (null) नहीं हो सकती।

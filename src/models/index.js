@@ -18,7 +18,7 @@
 
 
 // export { sequelize };
-// export default db;  
+// export default db;
 // // ✅ डेटाबेस कनेक्शन और db ऑब्जेक्ट को एक्सपोर्ट किया गया है:
 
 // // sequelize को नाम से एक्सपोर्ट (named export) किया गया है।
