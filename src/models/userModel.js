@@ -10,6 +10,8 @@ const User = sequelize.define('User', {
   // ✅ sequelize.define('User', {...}) के माध्यम से एक "User" नाम की टेबल बनाई जा रही है।
 
 
+  
+
   name: { type: DataTypes.STRING, allowNull: false },
   //   ✅ name फ़ील्ड:
   // type: DataTypes.STRING → यह फ़ील्ड एक स्ट्रिंग (text) होगी।
