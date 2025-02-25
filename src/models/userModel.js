@@ -25,8 +25,9 @@ const User = sequelize.define('User', {
   // allowNull: false → यह फ़ील्ड खाली (null) नहीं हो सकती।
   // unique: true → इस फ़ील्ड के लिए हर यूज़र का ईमेल अलग (unique) होगा, यानी एक जैसा ईमेल दो बार नहीं आ सकता।
 
-  imageUrl: {
-    type: DataTypes.STRING,
+  images: {
+    type: DataTypes.TEXT, // Store images as JSON string
+    allowNull: true
   },
 
 });

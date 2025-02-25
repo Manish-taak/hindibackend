@@ -16,7 +16,8 @@ router.get('/users', getUsers);
 // डेटाबेस से सभी यूज़र्स की लिस्ट (User List) को प्राप्त (fetch) करने के लिए उपयोग होता है।
 
 // router.post('/users', createUser);
-router.post("/users", upload.array("image",5), createUser);
+router.post("/users", upload.array("images"), createUser);
+
 
 // register route
 router.post("/register", registerUser);

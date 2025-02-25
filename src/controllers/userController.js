@@ -31,43 +31,70 @@ export const getUsers = async (req, res) => {
 //   }
 // };
 
+// export const createUser = async (req, res) => {
+//   try {
+//     console.log("Received Data:", req.body); // Debugging
+//     console.log("Uploaded File:", req.file); // Debugging
+//     // this will return error if file is not found or anything else
+//     // if (!req.file) {
+//     //   return res.status(400).json({ error: "Image is required" });
+//     // }
+//     if (!req.files || req.files.length === 0) {
+//       return res.status(400).json({ message: "Images are required" });
+//     }
+
+//     // fetching name and email from req and body
+
+//     const { name, email } = req.body;
+
+//     // fetching the image url
+
+//     // const imageUrl = `/uploads/${req.file.filename}`; // Construct image URL
+//     const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+
+//     // Debugging: Check values before inserting into DB
+//     console.log("Saving to DB:", { name, email, imageUrls });
+
+//     // creating the new user with image
+
+//     const newUser = await User.create({
+//       name,
+//       email,
+//       images: JSON.stringify(imageUrls),
+//     });
+//     // return res if the user created succesfully 
+//     res.status(201).json({ message: "User created successfully", user: newUser });
+//   } catch (error) {
+//     // return error if in any case
+//     console.error("Database Error:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+
 export const createUser = async (req, res) => {
   try {
-    console.log("Received Data:", req.body); // Debugging
-    console.log("Uploaded File:", req.file); // Debugging
-    // this will return error if file is not found or anything else
-    if (!req.file) {
-      return res.status(400).json({ error: "Image is required" });
-    }
-
-    // fetching name and email from req and body
+    console.log("Received Data:", req.body);
+    console.log("Uploaded Files:", req.files); // Debugging
 
     const { name, email } = req.body;
+    
+    // Check if files exist
+    const imageUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
-    // fetching the image url
-
-    const imageUrl = `/uploads/${req.file.filename}`; // Construct image URL
-
-    // Debugging: Check values before inserting into DB
-    console.log("Saving to DB:", { name, email, imageUrl });
-
-    // creating the new user with image
-
+    // Ensure database model has a field for images (as array)
     const newUser = await User.create({
       name,
       email,
-      imageUrl, // Make sure this matches the Sequelize model
+      images: JSON.stringify(imageUrls) // Save as JSON array
     });
-    // return res if the user created succesfully 
+
     res.status(201).json({ message: "User created successfully", user: newUser });
   } catch (error) {
-    // return error if in any case
-    console.error("Database Error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
-
-
 
 
 
