@@ -24,11 +24,12 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const { name, email } = req.body;
-
     // Check if files exist
     const imageUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
-
     // Ensure database model has a field for images (as array)
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) return res.status(400).json({ message: "User already exists" });
     const newUser = await User.create({
       name,
       email,
@@ -156,9 +157,10 @@ export const loginUser = async (req, res) => {
   }
 };
 
+
 export const updatePassword = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, newpassword } = req.body;
 
     // 1️⃣ Find user by email
     const user = await Register.findOne({ where: { email } });
@@ -166,20 +168,26 @@ export const updatePassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 2️⃣ Compare new password with existing hashed password
-    const isSamePassword = await bcrypt.compare(password, user.password);
+    // 2️⃣ Compare old password with existing hashed password
+    const isOldPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isOldPasswordCorrect) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    // 3️⃣ Ensure the new password is different from the old password
+    const isSamePassword = await bcrypt.compare(newpassword, user.password);
     if (isSamePassword) {
       return res.status(400).json({ message: "New password cannot be the same as the old password" });
     }
 
-    // 3️⃣ Hash the new password
+    // 4️⃣ Hash the new password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(newpassword, salt);
 
-    // 4️⃣ Update the password in the database
+    // 5️⃣ Update the password in the database
     await user.update({ password: hashedPassword });
 
-    // 5️⃣ Send success response
+    // 6️⃣ Send success response
     res.status(200).json({ message: "Password updated successfully" });
 
   } catch (error) {
@@ -187,6 +195,25 @@ export const updatePassword = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+export const deleteprofile = async (req, res) => {
+  try {
+    const { id } = req.params; // Get user ID from URL params
+
+    // Find the user
+    const user = await Register.findByPk(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Delete the user
+    await user.destroy();
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
 // ✅ यह फ़ंक्शन /users API को हैंडल करता है और नया यूज़र जोड़ने की सुविधा देता है।
 // 📌 स्टेप-बाय-स्टेप समझें:
 
