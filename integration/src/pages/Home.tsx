@@ -1,6 +1,7 @@
 import Banner from "../components/home/Banner"
 import Register from "../components/home/Register"
 import UpdatePassword from "../components/home/UpdatePassword"
+import Users from "../components/home/Users"
 
 const Home = () => {
   return (
@@ -9,6 +10,7 @@ const Home = () => {
         <Register />
         <Banner />
         <UpdatePassword />
+        <Users/>
       </div>
     </>
   )

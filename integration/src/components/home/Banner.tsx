@@ -1,16 +1,24 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form"
-
+import * as yup from "yup";
 interface login {
   email: string,
   password: string
 }
 const Banner = () => {
+  const schema = yup.object().shape({
+    email: yup.string().email("Invalid email").required("Email is required"),
+    password: yup.string().required("password required").min(6, "Password must be at least 6 characters")
+  });
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<login>();
+  } = useForm<login>({
+    resolver: yupResolver(schema)
+  });
   const onSubmit: SubmitHandler<login> = async (data) => {
     try {
       const response = await fetch("http://localhost:5000/api/login", {
@@ -35,11 +43,11 @@ const Banner = () => {
         login
       </h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <input placeholder="Email" className="p-3 border border-green-300 outline-none rounded" {...register("email", { required: true })} type="text" />
-        {errors.email && <span className="text-red-500">Email required</span>}
+        <input placeholder="Email" className={`p-3 border border-green-300 outline-none rounded ${errors.email && "input-error"}`} {...register("email", { required: true })} type="text" />
+        {errors.email && <span className="text-red-500">{errors.email.message}</span>}
 
-        <input placeholder="Password" className="p-3 border border-green-300 outline-none rounded" {...register("password", { required: true })} type="text" />
-        {errors.password && <span className="text-red-500">Password required</span>}
+        <input placeholder="Password" className={`p-3 border border-green-300 outline-none rounded ${errors.password && "input-error"}`} {...register("password", { required: true })} type="text" />
+        {errors.password && <span className="text-red-500">{errors.password.message}</span>}
         <button className="capitalize py-2 px-4 text-white bg-green-500 text-xl cursor-pointer w-auto hover:bg-green-600" type="submit">submit</button>
       </form>
     </div>
