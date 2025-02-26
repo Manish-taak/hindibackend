@@ -1,6 +1,6 @@
 import Banner from "../components/home/Banner"
 import Register from "../components/home/Register"
-import UpdatePassword from "../components/home/updatePassword"
+import UpdatePassword from "../components/home/UpdatePassword"
 
 const Home = () => {
   return (
