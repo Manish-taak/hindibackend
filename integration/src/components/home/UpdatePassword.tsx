@@ -23,7 +23,6 @@ const UpdatePassword = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm<updatePassword>({
         resolver: yupResolver(schema)

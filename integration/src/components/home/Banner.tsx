@@ -14,7 +14,6 @@ const Banner = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<login>({
     resolver: yupResolver(schema)
