@@ -17,8 +17,6 @@ const UpdatePassword = () => {
             /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
             "Password must be at least 6 characters, include 1 uppercase letter, 1 number, and 1 special character"
         ),
-
-
     })
     const {
         register,
@@ -63,4 +61,4 @@ const UpdatePassword = () => {
     )
 }
 
-export default UpdatePassword
+export default UpdatePassword;
