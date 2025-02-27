@@ -2,8 +2,7 @@ import User from '../models/userModel.js';
 import Register from '../models/register.js';
 import bcrypt from "bcrypt";
 import { generateToken } from '../middlewares/jwt.js';
-// यह User मॉडल (userModel.js से) इम्पोर्ट किया गया है, जिससे हम डेटाबेस में स्टोर किए गए यूज़र डेटा को एक्सेस और मैनेज कर सकते हैं।
-
+import { registerSchema , updatePasswordSchema } from '../validations/userValidation.js';
 // `getUsers` ek function hai jo users ki list ko fetch karta hai
 export const getUsers = async (req, res) => {
 
@@ -22,7 +21,6 @@ export const getUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 
 // `createUser` ek function hai jo naye user ko database mein add karta hai
@@ -62,11 +60,6 @@ export const createUser = async (req, res) => {
 };
 
 
-
-
-// update user
-
-
 // `updateUser` ek function hai jo existing user ka data update karta hai
 export const updateUser = async (req, res) => {
   try {
@@ -94,7 +87,7 @@ export const updateUser = async (req, res) => {
     await user.update({
       name: name || user.name,        // Agar `name` nahi aaya to purana `name` hi rahega
       email: email || user.email,     // Agar `email` nahi aaya to purana `email` hi rahega
-      images: JSON.stringify(imageUrls) // Images ko JSON string mein save kar rahe hain
+      images: imageUrls && imageUrls.length > 0 ? JSON.stringify(imageUrls) : user.images
     });
 
     // Update hone ke baad success response bhej rahe hain
@@ -117,8 +110,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-
-// delete user
 
 // `deleteUser` ek function hai jo user ko database se delete karta hai
 export const deleteUser = async (req, res) => {
@@ -150,9 +141,9 @@ export const deleteUser = async (req, res) => {
 
 
 // register
-
 export const registerUser = async (req, res) => {
   try {
+    await registerSchema.validate(req.body, { abortEarly: false });
     // Request body se `name`, `email` aur `password` ko destructure kar rahe hain
     const { name, email, password } = req.body;
     // Yahan par user ke input se name, email aur password le rahe hain
@@ -184,6 +175,9 @@ export const registerUser = async (req, res) => {
 
   // Agar koi error aata hai to catch block chalega
   catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ errors: error.errors });
+    }
     res.status(500).json({ message: "Server Error" });
     // 500 status ka matlab hota hai ki koi server-side error aaya hai
   }
@@ -191,7 +185,6 @@ export const registerUser = async (req, res) => {
 
 
 // get all profiles
-
 export const fetchUsers = async (req, res) => {
   // `fetchUsers` ek asynchronous function hai jo database se sare users ko fetch karta hai
   try {
@@ -211,7 +204,6 @@ export const fetchUsers = async (req, res) => {
 
 
 // login
-
 export const loginUser = async (req, res) => {
   try {
     // `email` aur `password` ko request body se destructure kar rahe hain
@@ -247,8 +239,12 @@ export const loginUser = async (req, res) => {
 };
 
 
+// update password
 export const updatePassword = async (req, res) => {
   try {
+
+    await updatePasswordSchema.validate(req.body, { abortEarly: false });
+
     const { email, password, newpassword } = req.body;
     // 🔑 Request body se email, old password aur new password ko get kiya ja raha hai
 
@@ -286,12 +282,16 @@ export const updatePassword = async (req, res) => {
 
   } catch (error) {
     // Agar koi error aata hai to 500 status aur error message bhejte hain
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ errors: error.errors });
+    }
     console.error("Error updating password:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
 
+// delete user profile
 export const deleteprofile = async (req, res) => {
   try {
     const { id } = req.params;
@@ -318,15 +318,3 @@ export const deleteprofile = async (req, res) => {
   }
 };
 
-
-// ✅ यह फ़ंक्शन /users API को हैंडल करता है और नया यूज़र जोड़ने की सुविधा देता है।
-// 📌 स्टेप-बाय-स्टेप समझें:
-
-// req.body → फ्रंटएंड या API से आने वाले डेटा को name और email के रूप में एक्सेस करता है।
-// User.create({ name, email }) → यह Sequelize का मेथड है, जो नया यूज़र डेटाबेस में जोड़ता है।
-// res.json(newUser); → नया यूज़र क्रिएट होने के बाद, उसे JSON फॉर्मेट में रिस्पॉन्स में भेज दिया जाता है।
-// एरर हैंडलिंग → अगर कोई गलती होती है, तो "500 (Internal Server Error)" के साथ एरर मैसेज भेजा जाता है।
-
-
-// GET /users → सभी यूज़र्स की लिस्ट को डेटाबेस से लाता है।
-// POST /users → नया यूज़र डेटाबेस में जोड़ता है।

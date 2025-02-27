@@ -8,7 +8,7 @@ interface login {
 const Banner = () => {
   const schema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().required("password required").min(6, "Password must be at least 6 characters")
+    password: yup.string().required("password required")
   });
 
   const {

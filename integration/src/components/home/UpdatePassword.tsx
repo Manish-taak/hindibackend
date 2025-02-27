@@ -9,10 +9,7 @@ interface updatePassword {
 const UpdatePassword = () => {
     const schema = yup.object().shape({
         email: yup.string().required("email is required").email("please check your email"),
-        password: yup.string().required("password is required").matches(
-            /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-            "Password must be at least 6 characters, include 1 uppercase letter, 1 number, and 1 special character"
-        ),
+        password: yup.string().required("password is required"),
         newpassword: yup.string().required("password is required").matches(
             /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
             "Password must be at least 6 characters, include 1 uppercase letter, 1 number, and 1 special character"
