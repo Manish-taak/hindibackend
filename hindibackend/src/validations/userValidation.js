@@ -18,9 +18,20 @@ import * as yup from "yup"
 
 })
 
+const createUserSchema = yup.object({
+    name: yup.string().required("Name is required"),
+    email: yup.string().email("Please enter a valid email").required("Email is required"),
+    images: yup
+      .array()
+      .of(
+        yup.string().matches(/\.(jpg|jpeg|png)$/, "Only JPG, JPEG, and PNG formats are allowed")
+      )
+      .min(1, "Please upload at least one image")
+      .required("Images are required"),
+  });
 
 
-export{registerSchema,updatePasswordSchema}
+export{registerSchema,updatePasswordSchema,createUserSchema}
 
 
 

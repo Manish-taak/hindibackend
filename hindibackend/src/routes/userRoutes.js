@@ -1,7 +1,7 @@
 import express from 'express';
 import { getUsers, createUser, updateUser, deleteUser, registerUser, loginUser, updatePassword, deleteprofile, fetchUsers } from '../controllers/userController.js';
 import upload from '../middlewares/multerConfig.js';
-// ✅ यहाँ दो चीज़ें इम्पोर्ट की जा रही हैं:
+//  यहाँ दो चीज़ें इम्पोर्ट की जा रही हैं:
 
 // express → यह Express.js का मुख्य लाइब्रेरी है, जिससे हम API बना सकते हैं।
 // getUsers और createUser → ये दोनों यूज़र कंट्रोलर (userController.js) से इम्पोर्ट किए गए हैं, जो डेटाबेस से डेटा प्राप्त करने और नया यूज़र जोड़ने के लिए काम में आते हैं।
@@ -27,11 +27,11 @@ router.put("/updatepassword", updatePassword);
 
 router.delete("/deleteuser/:id", deleteprofile);
 router.get("/fetchusers", fetchUsers);
-// ✅ POST /users:
+//  POST /users:
 // जब कोई "/users" API को POST मेथड से कॉल करेगा, तब createUser फ़ंक्शन चलेगा।
 // नए यूज़र को डेटाबेस में जोड़ने (Insert new user) के लिए उपयोग होता है।
 router.put('/users/:id', upload.array("images"), updateUser);
 router.delete('/users/:id', deleteUser);
 
 export default router;
-// ✅ राउटर को एक्सपोर्ट किया गया है, ताकि इसे server.js या किसी अन्य फाइल में उपयोग किया जा सके।
+//  राउटर को एक्सपोर्ट किया गया है, ताकि इसे server.js या किसी अन्य फाइल में उपयोग किया जा सके।

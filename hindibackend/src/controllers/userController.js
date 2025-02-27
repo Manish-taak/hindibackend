@@ -2,7 +2,7 @@ import User from '../models/userModel.js';
 import Register from '../models/register.js';
 import bcrypt from "bcrypt";
 import { generateToken } from '../middlewares/jwt.js';
-import { registerSchema , updatePasswordSchema } from '../validations/userValidation.js';
+import { createUserSchema, registerSchema , updatePasswordSchema } from '../validations/userValidation.js';
 // `getUsers` ek function hai jo users ki list ko fetch karta hai
 export const getUsers = async (req, res) => {
 
@@ -35,6 +35,11 @@ export const createUser = async (req, res) => {
     // Agar file aayi hai to `map()` method se file ka path `/uploads/filename` mein convert kar rahe hain
     const imageUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
+    await createUserSchema.validate(
+      { name, email, images: imageUrls },
+      { abortEarly: false }
+    );
+
     // Database mein dekh rahe hain ki diya gaya email already exist karta hai ya nahi
     const existingUser = await User.findOne({ where: { email } });
 
@@ -55,6 +60,9 @@ export const createUser = async (req, res) => {
   // Agar try block mein koi error aata hai to catch block chalega
   catch (error) {
     // 500 status ka matlab hai internal server error aur error message bhej dete hain
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ errors: error.errors });
+    }
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
@@ -209,21 +217,21 @@ export const loginUser = async (req, res) => {
     // `email` aur `password` ko request body se destructure kar rahe hain
     const { email, password } = req.body;
 
-    // ✅ Step 1: Check if user exists
+    //  Step 1: Check if user exists
     // Database se user ka email check kar rahe hain ki vo exist karta hai ya nahi
     const user = await Register.findOne({ where: { email } });
 
     // Agar user nahi milta to 404 status ke saath message bhejte hain
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ✅ Step 2: Password Compare
+    //  Step 2: Password Compare
     // `bcrypt.compare()` ka use karke input password aur hashed password ko compare kar rahe hain
     const isMatch = await bcrypt.compare(password, user.password);
 
     // Agar password match nahi karta to 400 status ke saath invalid credentials ka message bhejte hain
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    // ✅ Step 3: JWT Token Generate
+    //  Step 3: JWT Token Generate
     // JWT token generate kar rahe hain jo user ID aur email ko payload mein rakhta hai
     const token = generateToken({ id: user.id, email });
 
@@ -246,23 +254,23 @@ export const updatePassword = async (req, res) => {
     await updatePasswordSchema.validate(req.body, { abortEarly: false });
 
     const { email, password, newpassword } = req.body;
-    // 🔑 Request body se email, old password aur new password ko get kiya ja raha hai
+    //  Request body se email, old password aur new password ko get kiya ja raha hai
 
-    // 1️⃣ User ko email se database mein find kar rahe hain
+    //  User ko email se database mein find kar rahe hain
     const user = await Register.findOne({ where: { email } });
     if (!user) {
       // Agar user nahi milta to 404 status ke sath message bhejte hain
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 2️⃣ Old password ko compare kar rahe hain jo user ne diya hai database wale hashed password se
+    //  Old password ko compare kar rahe hain jo user ne diya hai database wale hashed password se
     const isOldPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isOldPasswordCorrect) {
       // Agar old password match nahi karta to 400 status aur message bhejte hain
       return res.status(400).json({ message: "Old password is incorrect" });
     }
 
-    // 3️⃣ Check kar rahe hain ki new password aur old password same to nahi hai
+    //  Check kar rahe hain ki new password aur old password same to nahi hai
     const isSamePassword = await bcrypt.compare(newpassword, user.password);
     if (isSamePassword) {
       return res.status(400).json({
@@ -270,14 +278,14 @@ export const updatePassword = async (req, res) => {
       });
     }
 
-    // 4️⃣ New password ko hash kar rahe hain pehle `genSalt` se salt generate karke
+    //  New password ko hash kar rahe hain pehle `genSalt` se salt generate karke
     const salt = await bcrypt.genSalt(10); // Salt generate karna security ke liye hota hai
     const hashedPassword = await bcrypt.hash(newpassword, salt); // New password ko hash kar rahe hain
 
-    // 5️⃣ Database mein user ka password update kar rahe hain
+    //  Database mein user ka password update kar rahe hain
     await user.update({ password: hashedPassword });
 
-    // 6️⃣ Password successfully update hone ke baad success message bhej rahe hain
+    //  Password successfully update hone ke baad success message bhej rahe hain
     res.status(200).json({ message: "Password updated successfully" });
 
   } catch (error) {
@@ -295,9 +303,9 @@ export const updatePassword = async (req, res) => {
 export const deleteprofile = async (req, res) => {
   try {
     const { id } = req.params;
-    // 🔑 URL ke params se user ka **id** le rahe hain
+    //  URL ke params se user ka **id** le rahe hain
 
-    // 1️⃣ User ko database se find kar rahe hain ID ke basis par
+    //  User ko database se find kar rahe hain ID ke basis par
     const user = await Register.findByPk(id);
     // **findByPk()** method ka use hota hai Primary Key ke basis par record find karne ke liye
 
@@ -305,11 +313,11 @@ export const deleteprofile = async (req, res) => {
       // Agar user nahi milta to 404 (Not Found) status aur message bhej dete hain
       return res.status(404).json({ message: "User not found" });
 
-    // 2️⃣ Agar user mil jata hai to usko **destroy()** method se delete kar rahe hain
+    //  Agar user mil jata hai to usko **destroy()** method se delete kar rahe hain
     await user.destroy();
     // Ye method user ko permanently delete kar deta hai database se
 
-    // 3️⃣ Delete hone ke baad success message return kar rahe hain
+    //   Delete hone ke baad success message return kar rahe hain
     res.status(200).json({ message: "User deleted successfully" });
 
   } catch (error) {

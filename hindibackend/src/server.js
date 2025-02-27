@@ -40,7 +40,7 @@ app.use('/api', userRoutes);
 
 // Database se connection banane ke liye async function banaya gaya hai
 async function connectDB() {
-  try {
+  try {  
     // Database se connection ki jaanch ki ja rahi hai
     await sequelize.authenticate();
     console.log('✅ Database connected successfully.'); // Connection successful hone par message show kiya gaya hai
@@ -60,3 +60,5 @@ connectDB(); // Database se connection banane ke liye function ko call kiya gaya
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`); // Server start hone ka message console me show kiya gaya hai
 });
+
+ 
