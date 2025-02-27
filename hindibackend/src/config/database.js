@@ -1,24 +1,25 @@
 import { Sequelize } from 'sequelize';
-// ➡️ Sequelize लाइब्रेरी को इम्पोर्ट किया गया है, जो ORM (Object-Relational Mapping) टूल है और MySQL के साथ काम करने में मदद करता है।
+// 🔑 Yahan Sequelize package ko import kiya hai jo database ke sath interaction ke liye use hota hai.
 
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'; 
 dotenv.config();
-// dotenv लाइब्रेरी को इम्पोर्ट किया गया है, जिससे हम .env फाइल में रखे गोपनीय (sensitive) डेटा जैसे कि डेटाबेस का नाम, यूज़रनेम, पासवर्ड आदि को सुरक्षित रूप से एक्सेस कर सकते हैं।
+// 🔑 **dotenv** se environment variables ko load kar rahe hain, jo **.env** file mein hote hain.
+// ✅ Yeh sensitive information jaise database name, username aur password ko secure banata hai.
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS, {
-  host: process.env.DB_HOST,
-  dialect: 'mysql',
-});
-// process.env.DB_NAME → डेटाबेस का नाम .env फाइल से लिया जाता है।
-// process.env.DB_USER → डेटाबेस का यूज़रनेम।
-// process.env.DB_PASS → डेटाबेस का पासवर्ड।
-// host: process.env.DB_HOST → डेटाबेस सर्वर का होस्ट नेम (localhost या कोई अन्य)।
-// dialect: 'mysql' → Sequelize को बताया गया है कि यह MySQL के साथ काम करेगा।
+  process.env.DB_NAME,  // 🔑 Database ka naam jo **.env** file se aa raha hai.
+  process.env.DB_USER,  // 🔑 Database ka username.
+  process.env.DB_PASS,  // 🔑 Database ka password.
+  {
+    host: process.env.DB_HOST,  // 🔑 Database ka host (Localhost ya Remote Server ka URL)
+    dialect: 'mysql',           // 🔑 Yahan database ka type define kiya hai (Yani **MySQL**)
+  }
+);
+// ✅ Yeh connection establish karta hai Sequelize aur MySQL database ke beech.
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: false });
+// 🔑 Yeh line tables ko database mein automatically create karta hai agar wo pehle se exist nahi karti.
+// **force: false** ka matlab hai ki existing tables ko delete nahi karega.
 
 export default sequelize;
-// ➡️ Sequelize इंस्टेंस को एक्सपोर्ट कर दिया गया है, ताकि इसे दूसरी फाइलों में इम्पोर्ट करके डेटाबेस से कनेक्शन स्थापित किया जा सके।
+// ✅ Connection ko export kiya taaki doosre files mein use kiya ja sake.

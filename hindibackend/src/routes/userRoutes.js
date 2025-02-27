@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, createUser, updateUser, deleteUser, registerUser, loginUser, updatePassword, deleteprofile } from '../controllers/userController.js';
+import { getUsers, createUser, updateUser, deleteUser, registerUser, loginUser, updatePassword, deleteprofile, fetchUsers } from '../controllers/userController.js';
 import upload from '../middlewares/multerConfig.js';
 // ✅ यहाँ दो चीज़ें इम्पोर्ट की जा रही हैं:
 
@@ -26,6 +26,7 @@ router.post("/login", loginUser);
 router.put("/updatepassword", updatePassword);
 
 router.delete("/deleteuser/:id", deleteprofile);
+router.get("/fetchusers", fetchUsers);
 // ✅ POST /users:
 // जब कोई "/users" API को POST मेथड से कॉल करेगा, तब createUser फ़ंक्शन चलेगा।
 // नए यूज़र को डेटाबेस में जोड़ने (Insert new user) के लिए उपयोग होता है।

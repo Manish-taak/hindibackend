@@ -1,38 +1,48 @@
-import multer from 'multer';
-import path from 'path';
+// Multer ko import kiya ja raha hai, jo file upload ke liye middleware hai
+import multer from 'multer'; 
 
-// Storage configuration
-// this will ensure the path where the images iwll be uploaded
+// Path module ko import kiya ja raha hai, jo file aur directory paths ke saath kaam karta hai
+import path from 'path'; 
+
+// Storage configuration banayi ja rahi hai
+// Yeh batata hai ki images kis folder me upload hongi aur file ka naam kya hoga
 const storage = multer.diskStorage({
+    // Destination function decide karti hai ki file kis folder me jayegi
     destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Ensure this path exists
+        cb(null, 'uploads/'); // `uploads/` folder me file ko save kiya ja raha hai
     },
-    //   this will insure the name of file that it mlust be unique 
+    // Filename function se unique naam diya ja raha hai taaki ek hi naam ki file overwrite na ho
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        cb(null, `${Date.now()}-${file.originalname}`); // File ka naam current timestamp aur original naam ke saath set kiya ja raha hai
     }
 });
 
-// File filter function
+// File filter function banaya gaya hai
 const fileFilter = (req, file, cb) => {
-    // this will ensure the file type of the images
-    const fileTypes = /jpeg|jpg|png/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    // Allowed file types ko regular expression me define kiya gaya hai
+    const fileTypes = /jpeg|jpg|png/; 
+
+    // File extension ko check kiya ja raha hai
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase()); 
+    
+    // Mimetype ko check kiya ja raha hai
     const mimetype = fileTypes.test(file.mimetype);
 
+    // Agar extension aur mimetype dono sahi hai to file allow hogi
     if (extname && mimetype) {
         cb(null, true);
     } else {
-        cb(new Error('Only JPEG, JPG, and PNG files are allowed!'), false);
+        // Agar galat file type ho to error message diya jayega
+        cb(new Error('Only JPEG, JPG, and PNG files are allowed!'), false); 
     }
 };
 
-// Multer upload setup
+// Multer ka upload setup kiya ja raha hai
 const upload = multer({
-    storage: storage,
-    //   this will limite the size of image
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
-    fileFilter: fileFilter
+    storage: storage, // Storage configuration set ki gayi hai
+    limits: { fileSize: 5 * 1024 * 1024 }, // File size limit 5MB set ki gayi hai
+    fileFilter: fileFilter // File filter function ko set kiya gaya hai
 });
 
+// Upload middleware ko export kiya ja raha hai taaki doosri files me use ho sake
 export default upload;
