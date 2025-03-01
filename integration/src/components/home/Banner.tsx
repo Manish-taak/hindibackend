@@ -23,7 +23,7 @@ const Banner = () => {
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data),          
       });
 
       const result = await response.json();
@@ -36,12 +36,14 @@ const Banner = () => {
       alert(err)
     }
   }
+
   return (
     <div>
       <h1 className="text-4xl italic text-green-500 capitalize text-center my-5">
         login
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <form 
+      onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <input placeholder="Email" className={`p-3 border border-green-300 outline-none rounded ${errors.email && "input-error"}`} {...register("email", { required: true })} type="text" />
         {errors.email && <span className="text-red-500">{errors.email.message}</span>}
 
