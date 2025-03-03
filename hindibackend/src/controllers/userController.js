@@ -2,7 +2,8 @@ import User from '../models/userModel.js';
 import Register from '../models/register.js';
 import bcrypt from "bcrypt";
 import { generateToken } from '../middlewares/jwt.js';
-import { createUserSchema, registerSchema , updatePasswordSchema } from '../validations/userValidation.js';
+import { createUserSchema, registerSchema, updatePasswordSchema } from '../validations/userValidation.js';
+
 // `getUsers` ek function hai jo users ki list ko fetch karta hai
 export const getUsers = async (req, res) => {
 
@@ -39,6 +40,10 @@ export const createUser = async (req, res) => {
       { name, email, images: imageUrls },
       { abortEarly: false }
     );
+
+    // Bhai,
+    // abortEarly: false ka matlab hai ki agar validation fail hoti hai, toh saari errors ek sath return hogi, na ki pehli error pe hi validation stop ho jayega.
+
 
     // Database mein dekh rahe hain ki diya gaya email already exist karta hai ya nahi
     const existingUser = await User.findOne({ where: { email } });
@@ -326,3 +331,15 @@ export const deleteprofile = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+// 🎯 Synchronous vs Asynchronous Programming
+// 🔹 1. Synchronous (Ek ke baad ek)
+// 👉 Is tarike me ek kaam complete hone ke baad hi doosra kaam start hota hai.
+// 👉 JavaScript ka default behavior synchronous hota hai.
+// 👉 Agar ek task zyada time le, to pura program ruk jayega.

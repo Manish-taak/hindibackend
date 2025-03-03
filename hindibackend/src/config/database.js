@@ -3,8 +3,12 @@ import { Sequelize } from 'sequelize';
 
 import dotenv from 'dotenv'; 
 dotenv.config();
+
 //  **dotenv** se environment variables ko load kar rahe hain, jo **.env** file mein hote hain.
 //  Yeh sensitive information jaise database name, username aur password ko secure banata hai.
+
+// Bhai mera ,
+// config() ek function hai jo dotenv package me hota hai. Jab tum dotenv.config(); likhte ho, toh ye function .env file ko read karta hai aur usme jo environment variables hain, unko process.env me set kar deta hai.
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,  // 🔑 Database ka naam jo **.env** file se aa raha hai.
@@ -16,6 +20,14 @@ const sequelize = new Sequelize(
   }
 );
 //  Yeh connection establish karta hai Sequelize aur MySQL database ke beech.
+
+
+
+// new Sequelize(...)
+// Yeh Sequelize ka ek instance create kar raha hai jo database ke sath interact karega.
+// Is instance ko hum queries likhne ke liye use karenge.
+
+
 
 sequelize.sync({ force: false });
 //  Yeh line tables ko database mein automatically create karta hai agar wo pehle se exist nahi karti.

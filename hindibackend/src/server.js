@@ -18,7 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS middleware ko use kiya gaya hai taaki doosri origins se request allow ho
-app.use(cors());
+express().use(cors());
 
 // Express middleware ko use kiya gaya hai taaki incoming JSON data ko parse kiya ja sake
 app.use(express.json());
@@ -39,8 +39,9 @@ app.use('/uploads', express.static(uploadDir));
 app.use('/api', userRoutes);
 
 // Database se connection banane ke liye async function banaya gaya hai
+
 async function connectDB() {
-  try {  
+  try {
     // Database se connection ki jaanch ki ja rahi hai
     await sequelize.authenticate();
     console.log('✅ Database connected successfully.'); // Connection successful hone par message show kiya gaya hai
@@ -61,4 +62,21 @@ app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`); // Server start hone ka message console me show kiya gaya hai
 });
 
- 
+
+// Express Kya Hai?
+// Node.js ek JavaScript runtime environment hai jo JavaScript code ko server-side execute karne ki facility deta hai.
+
+// Express Kya Hai?
+// 👉 Express ek Node.js ka framework hai jo server banane ka kaam easy kar deta hai.
+
+
+// Node.js vs Express.js
+
+// Feature    	          Node.js               	Express.js
+// Definition	            JavaScript runtime	    Node.js ka framework
+// Kaam                 	Server-side scripting	  Server banane ko easy karna
+// Speed               	  Fast	                  Faster development
+// Code Complexity    	  Zyada	                  Kam
+// Routing              	Manual	                Automatic routing
+// Middleware          	Complex	                Easy to use   
+
