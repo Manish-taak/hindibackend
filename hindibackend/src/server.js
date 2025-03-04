@@ -6,6 +6,14 @@ import userRoutes from './routes/userRoutes.js';
 import path from 'path';
 import fs from 'fs';
 
+// import User from './models/userModel.js';
+// import Register from './models/register.js';
+
+// methode one 
+// import "../src/models/userModel.js";
+// import "../src/models/register.js";
+
+
 // Install Dependencies
 // npm install express sequelize mysql2 dotenv bcrypt jsonwebtoken cors
 
@@ -40,6 +48,18 @@ app.use('/api', userRoutes);
 
 // Database se connection banane ke liye async function banaya gaya hai
 
+
+
+
+
+
+
+
+
+/**
+ *  methode one Ek sath sari table create karne ke liye 
+ * 
+ */
 async function connectDB() {
   try {
     // Database se connection ki jaanch ki ja rahi hai
@@ -47,13 +67,40 @@ async function connectDB() {
     console.log('✅ Database connected successfully.'); // Connection successful hone par message show kiya gaya hai
 
     // Database ko synchronize kiya gaya hai taaki tables automatically create ho sakein
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: false });
     console.log('✅ Database synchronized.'); // Synchronization ka message show kiya gaya hai
+
+    // single table sync
+    // await User.sync({ alter: true });
+    // console.log("✅ User table synchronized.");
+
+    // await Register.sync({ alter: true });
+    // console.log("✅ Register table synchronized");
+    
   } catch (error) {
     // Agar koi error aaye to wo console me show hoga
     console.error('❌ Unable to connect to the database:', error);
   }
 }
+
+
+// async function connectDB() {
+//   try {
+//       await sequelize.authenticate();
+//       console.log('✅ Database connected successfully.');
+
+//       // Individual table sync
+//       await User.sync({ alter: true });
+//       console.log("✅ User table synchronized.");
+
+//       await Product.sync({ alter: true });
+//       console.log("✅ Product table synchronized.");
+
+//   } catch (error) {
+//       console.error('❌ Database Sync Error:', error);
+//   }
+// }
+
 
 connectDB(); // Database se connection banane ke liye function ko call kiya gaya hai
 
@@ -61,6 +108,7 @@ connectDB(); // Database se connection banane ke liye function ko call kiya gaya
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`); // Server start hone ka message console me show kiya gaya hai
 });
+
 
 
 // Express Kya Hai?
@@ -79,4 +127,7 @@ app.listen(PORT, () => {
 // Code Complexity    	  Zyada	                  Kam
 // Routing              	Manual	                Automatic routing
 // Middleware          	Complex	                Easy to use   
+
+
+
 
